@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome & Letter Page</title>
+    <style>
+        /* ======= GENERAL RESET ======= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 1s ease;
+        }
+
+        /* ======= WELCOME PAGE ======= */
+        .welcome-section {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0, #f7971e, #ffd200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 1s ease;
+            z-index: 2;
+        }
+
+        .welcome-section.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-text {
+            text-align: center;
+        }
+
+        .custom-link {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 3em;
+            font-family: 'Segoe UI', sans-serif;
+            text-shadow: 2px 2px 8px #444;
+            margin-bottom: 0.2em;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #fff;
+            animation: bounce 1s infinite;
+            display: block;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0);}
+            50% { transform: translateY(-15px);}
+        }
+
+        /* ======= LETTER PAGE ======= */
+        .letter-section {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        .letter-section.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        header, footer {
+            text-align: center;
+            padding: 15px;
+            background: #f4b6c2;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e88ca7;
+        }
+
+        footer {
+            border-top: 2px solid #e88ca7;
+            border-bottom: none;
+            margin-top: auto;
+            font-size: 1rem;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffc0cb, #fff);
+            color: #c76583;
+        }
+
+        .music-container {
+            position: absolute;
+            left: 20px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 192, 203, 0.3);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #e88ca7;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-container p {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #c76583;
+        }
+
+        .flower-container {
+            position: absolute;
+            right: 20px;
+            bottom: 60px;
+            text-align: center;
+        }
+
+        .flower-container img {
+            width: 120px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid #e88ca7;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .flower-container p {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #c76583; 
+        }
+
+        .envelope-container {
+            width: 90vw;
+            max-width: 400px;
+            aspect-ratio: 1.4 / 1;
+            perspective: 1200px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #f9d2dc;
+            border: 1px solid #e88ca7;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.1s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .envelope.open {
+            transform: rotateX(45deg);
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: #ffc0cb;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            transform-origin: top;
+            transition: transform 1s;
+            z-index: 2;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(-120deg);
+        }
+
+        .heart-stamp {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width:50px;
+            height: 50px;
+            background: #e88ca7;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            border: 2px solid #c76583;
+            box-shadow: 0 2px 5px rgba(0, 0, 0,  0.2);
+        }
+
+        .letter { 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 95%;
+            height: 95%;
+            background: white;
+            border: 2px solid #e0b0c4;
+            border-radius: 10px;
+            transform: translate(-50%, -50%) translateY(100%);
+            transition: transform 1s;
+            z-index: 1;
+            padding: 16px; 
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .envelope.open .letter {
+            transform: translate(-50%, -50%) translateY(0);
+        }
+
+        .letter-content {
+            color: #c76583;
+            font-size: 16px;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .heart-image {
+            width: 60vw;
+            max-width: 200px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            clip-path: polygon(50% 0%, 62% 13%, 75% 25%, 85% 40%, 90% 65%, 85% 70%, 75% 85%, 50% 100%, 25% 85%, 15% 70%, 10% 85%, 15% 40%, 25% 25%, 39% 13%);
+            overflow: hidden;
+            border: 2px solid #e88ca7;
+        }
+
+        .heart-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hint {
+            margin-top: 15px;
+            color: #c76583;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .response-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        .response-buttons button {
+            background-color: #f4b6c2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .response-buttons button:hover {
+            background-color: #e88ca7;
+            transform: scale(1.05);
+        }
+        .yes-btn {
+            background-color: #f4b6c2;
+        }
+        .no-btn {
+            background-color: #e0b0c2
+        }
+
+        @media (max-width: 500px) {
+            header, footer {
+                font-size: 1rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ======= WELCOME SECTION ======= -->
+    <div class="welcome-section" id="welcome">
+        <div class="welcome-text">
+            <span class="arrow">&#8595;</span>
+            <a class="custom-link" id="startBtn" title="Click to Continue">
+                <h1>Hi!</h1>
+            </a>
+            <span style="color:#fff; font-size:1.2em;">Click the text above to continue</span>
+        </div>
+    </div>
+
+    <!-- ======= LETTER SECTION ======= -->
+    <div class="letter-section" id="letterSection">
+        <header>Welcome to Your Special Letter!</header>
+        <main>
+            <div class="music-container">
+                <p>🎶 Now Playing: <br><strong>Stuck With U</strong><br>By Ariana Grande & Justin Bieber</p>
+                <audio controls>
+                    <source src="Stuck With U.mp3" type="audio/mpeg">
+                    Your browser does not support the audio tag.
+                </audio>
+            </div>
+
+            <div class="envelope-container">
+                <div class="envelope" id="envelope">
+                    <div class="flap"></div>
+                    <div class="heart-stamp">&#10084;</div>
+                    <div class="letter">
+                        <div class="letter-content">
+                            <!-- Letter content remains the same -->
+                            <p>My Dearest Clee,</p>
+                        <p>This is a special letter just for you! I hope it brings a smile to your face and warmth to your heart.</p>
+                        <p>I know you've been waiting for me longer than you should have, and I can only imagine the questions in your heart. </p>
+                        <p> Wondering if all of this is just something casual.</p>
+                        <p> I find myself wanting something more, something real. And in you.</p>
+                        <p> There's something in you, something quiet yet powerful, that stirs my heart in a ways words can barely touch, awakening feelings I thought only in dreams existed. </p>
+                        <p>Please know that I offer this letter not to overwhelm you, but to gently share the truth of what I feel for you.</p>
+                        <p> I don't wish to rush your heart or ask for anything that you are not ready to give.</p>
+                        <p> But if your heart is open, I would be honored to walk besides you step by step.</p>
+                        <p> As someone who longs to know you more deeply, care for you sincerely, and perhaps in time.</p>
+                        <p>When we were talking, you opened up a topic that lingered in my thoughts long after.</p>
+                        <p> And because of that, your words have inspired me to write this letter.</p>
+                        <p> I don't like you being confused about whether our relationship is just a "TALKING STAGE" or a "SITUATIONSHIP".</p>
+                        <p>Thinking back to what I said that day, I realized now more than ever, I want our relationship to grow into something deeper and more meaningful.</p>
+                        <p>Because I saw the way you smiled, the way you cared for me. </p>
+                        <p>Just talking to you has made me realize how much I value your presence in my life.</p>
+                        <p> Being around you brings me so much happiness.</p>
+                        <p> You are the one who has colored my once black and white view of this world.</p>
+                        <p>And I mean it.</p>
+                        <p> I want you to know, that every beat of my heart my feelings for you are geniune and unwavering.</p>
+                        <p>I love you for being a sleepy head, I love you for having a cute personality, I love seeing you smile, I love listening to your yaps everyday. And I love everything about you.</p>
+                        <p>Also don't hesitate to tell me about your problems. Because you can always tell me anything and I'll always be there to comfort you my Clee.</p>
+                        <p>You can call me anytime if you feel alone, because I won't have any second thoughts or hesitate to come to you.  </p>
+                        <p> I remember the night I came to the party because you said you missed me? I didn't hesitate, I immediately get dressed because you are making me worry that night.</p>
+                        <p> And that night, I saw how you get drunk.</p>
+                        <p> You are so naughty, cute, and clingy.</p>
+                        <p> And I wish I were the only one who could see that hidden side of yours.</p>
+                        <p>It is my sincere intention to pursue a meaningful relationship with you based on respect,honesty, and genuine care. I want to assure you that I will hold your happiness and well-being in the highest regard.</p>
+                        <p>I kindly ask for your permission to take this important step. I am committed to treating you with respect and sincerity throughout this journey.</p>
+                        <p> Kaya, Clee, I Write this letter just for you because you are my special person.</p>
+                        <p> You know this is my first time doing this, and I created this website to tell you everything. </p>
+                        <p> I know this is not enough, because this is the only way I can express what I feel about you.</p>
+                        <p> I realize that I may be asking this too late given our current situation, and I understand that it has caused you some confusion.</p>
+                        <p> So in here I wanted your confusion to be cleared.</p>
+                        <p> So, Clee, I'am asking you, right now, right here.</p>
+                        <p> If it's alright with you,</p>
+                        <p>May</p>
+                        <p>I</p>
+                        <p>court</p>
+                        <p>you?</p>
+                        </div>
+
+                        <div class="response-buttons">
+                            <button class="yes-btn">💗 YES </button>
+                            <button class="no-btn">💔 NO</button> 
+                        </div>
+                        <div class="heart-image">
+                            <img src="heart.jpg" alt="Heart Image">
+                        </div>
+                    </div>
+                </div>
+                <div class="hint">Tap the envelope to open your letter!</div>
+            </div>
+
+            <div class="flower-container">
+                <img src="Stargazer Lillies.jpg" alt="Stargazer Lillies">
+                <p>Stargazer Lilies for You</p>
+            </div>
+        </main>
+        <footer>&copy; 2025 Simon. All rights reserved.</footer>
+    </div>
+
+    <script>
+        // Transition from welcome page to letter page
+        document.getElementById('startBtn').addEventListener('click', function() {
+            document.getElementById('welcome').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('letterSection').classList.add('active');
+            }, 800);
+        });
+
+        // Envelope open/close 
+        document.getElementById('envelope').addEventListener('click', function() {
+            this.classList.toggle('open');
+        });
+
+        document.querySelector('.yes-btn').addEventListener('click', (e) => {e.stopPropagation(); alert("YAY! You Just Made Me The Happiest Person Today!");});
+        document.querySelector('.no-btn').addEventListener('click', (e) => {e.stopPropagation(); alert("Oh... That's okay I understand, Clee. ");});
+    </script>
+</body>
+</html>
